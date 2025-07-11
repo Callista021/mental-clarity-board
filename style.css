@@ -1,0 +1,193 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: #f8f9fc;
+  height: 100vh;
+  display: flex;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  background: #f1f5f9;
+  padding: 20px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  color: #334155;
+}
+
+.note-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.3s;
+  text-align: left;
+}
+
+.pastel-purple { background: #f3e8ff; }
+.pastel-blue { background: #e0f2fe; }
+.pastel-yellow { background: #fef9c3; }
+
+.note-btn:hover {
+  opacity: 0.9;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.toolbar-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.toolbar-btn.green { background: #bbf7d0; }
+.toolbar-btn.blue { background: #bae6fd; }
+.toolbar-btn.red { background: #fecaca; }
+
+.toolbar-btn:hover {
+  opacity: 0.85;
+}
+
+.board-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: 20px;
+}
+
+.start-message {
+  text-align: center;
+  color: #64748b;
+}
+
+.start-circle {
+  background: linear-gradient(135deg, #c084fc, #f472b6);
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.start-message .small {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.notes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+.note-card {
+  border-radius: 10px;
+  padding: 12px;
+  width: 200px;
+  min-height: 100px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  background: #ffffff;
+  word-wrap: break-word;
+}
+
+/* Sketch Canvas Styles */
+
+.sketch-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.sketch-container canvas {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  max-width: 100%;
+}
+
+.sketch-buttons {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sketch-buttons button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #e2e8f0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sketch-buttons button:hover {
+  background: #cbd5e1;
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .note-card {
+    width: 100%;
+  }
+}
