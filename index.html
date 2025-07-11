@@ -2,51 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mental Clarity Board</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <aside class="sidebar">
-      <h2>Mental Clarity Board 🧠</h2>
-      <div class="add-note-section">
-        <h3>+ Add Note</h3>
-        <button onclick="addNote()">Text Note</button>
-        <button disabled>Sketch</button>
-        <button disabled>Voice Note</button>
+    <div class="sidebar">
+      <h2>Mental Clarity Board</h2>
+      <button class="note-btn pastel-purple">✏️ Text Note</button>
+      <button class="note-btn pastel-blue">🎨 Sketch</button>
+      <button class="note-btn pastel-yellow">🎤 Voice Note</button>
+    </div>
+
+    <div class="main">
+      <div class="toolbar">
+        <button class="toolbar-btn green">⬇️ Export</button>
+        <button class="toolbar-btn blue">⬆️ Import</button>
+        <button class="toolbar-btn red">🗑️ Clear Board</button>
       </div>
 
-      <div class="color-section">
-        <h3>Color</h3>
-        <input type="color" id="colorPicker" value="#ffeb3b" title="Pick note color" />
-      </div>
-
-      <div class="tags-section">
-        <h3>Tags</h3>
-        <button disabled>Manage Tags</button>
-      </div>
-
-      <div class="notes-count">
-        <p id="notesCount">0 notes</p>
-      </div>
-    </aside>
-
-    <main class="board">
-      <div class="top-bar">
-        <button class="export-btn" onclick="exportNotes()">Export</button>
-        <button class="import-btn" disabled>Import</button>
-        <button class="clear-btn" onclick="clearAllNotes()">Clear Board</button>
-      </div>
-
-      <div id="notesContainer" class="notes-container">
-        <div class="start-prompt">
-          <div class="plus-icon">+</div>
+      <div class="board-center">
+        <div class="start-message">
+          <div class="start-circle">+</div>
           <p>Start Your Brain Dump</p>
-          <span>Click the + button in the toolbar to add your first note</span>
+          <p class="small">Click a button on the left to add your first note</p>
         </div>
       </div>
-    </main>
+    </div>
   </div>
 
   <script src="script.js"></script>
