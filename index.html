@@ -7,16 +7,47 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Mental Clarity Board 🧠</h1>
-    <button onclick="clearAllNotes()">Clear All</button>
-  </header>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Mental Clarity Board 🧠</h2>
+      <div class="add-note-section">
+        <h3>+ Add Note</h3>
+        <button onclick="addNote()">Text Note</button>
+        <button disabled>Sketch</button>
+        <button disabled>Voice Note</button>
+      </div>
 
-  <main>
-    <textarea id="noteInput" placeholder="Type your thought here..."></textarea>
-    <button onclick="addNote()">➕ Add Note</button>
-    <div id="notesContainer"></div>
-  </main>
+      <div class="color-section">
+        <h3>Color</h3>
+        <input type="color" id="colorPicker" value="#ffeb3b" title="Pick note color" />
+      </div>
+
+      <div class="tags-section">
+        <h3>Tags</h3>
+        <button disabled>Manage Tags</button>
+      </div>
+
+      <div class="notes-count">
+        <p id="notesCount">0 notes</p>
+      </div>
+    </aside>
+
+    <main class="board">
+      <div class="top-bar">
+        <button class="export-btn" onclick="exportNotes()">Export</button>
+        <button class="import-btn" disabled>Import</button>
+        <button class="clear-btn" onclick="clearAllNotes()">Clear Board</button>
+      </div>
+
+      <div id="notesContainer" class="notes-container">
+        <div class="start-prompt">
+          <div class="plus-icon">+</div>
+          <p>Start Your Brain Dump</p>
+          <span>Click the + button in the toolbar to add your first note</span>
+        </div>
+      </div>
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
