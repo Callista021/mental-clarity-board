@@ -1,95 +1,166 @@
-function addNote() {
-  const colorPicker = document.getElementById('colorPicker');
-  const text = prompt("Enter your note:").trim();
-  if (!text) {
-    alert('Please enter a note!');
-    return;
+document.addEventListener("DOMContentLoaded", () => {
+  const boardCenter = document.querySelector(".board-center");
+  const main = document.querySelector(".main");
+  const textNoteBtn = document.querySelector(".pastel-purple");
+  const sketchBtn = document.querySelector(".pastel-blue");
+  const voiceNoteBtn = document.querySelector(".pastel-yellow");
+  const clearBoardBtn = document.querySelector(".toolbar-btn.red");
+  const exportBtn = document.querySelector(".toolbar-btn.green");
+  const importBtn = document.querySelector(".toolbar-btn.blue");
+
+  let notes = [];
+
+  function renderNotes() {
+    main.innerHTML = `
+      <div class="toolbar">
+        <button class="toolbar-btn green">⬇️ Export</button>
+        <button class="toolbar-btn blue">⬆️ Import</button>
+        <button class="toolbar-btn red">🗑️ Clear Board</button>
+      </div>
+      <div class="notes-container"></div>
+    `;
+
+    const notesContainer = main.querySelector(".notes-container");
+
+    notes.forEach((note) => {
+      const noteDiv = document.createElement("div");
+      noteDiv.classList.add("note-card");
+      noteDiv.style.background = note.color;
+
+      if (note.type === "Sketch") {
+        noteDiv.innerHTML = `<strong>${note.type} Note</strong><br><img src="${note.content}" alt="Sketch" style="width:100%;"/>`;
+      } else {
+        noteDiv.innerHTML = `
+          <strong>${note.type} Note</strong>
+          <p>${note.content}</p>
+        `;
+      }
+
+      notesContainer.appendChild(noteDiv);
+    });
+
+    // Reattach toolbar events
+    main.querySelector(".toolbar-btn.red").addEventListener("click", clearBoard);
+    main.querySelector(".toolbar-btn.green").addEventListener("click", exportBoard);
+    main.querySelector(".toolbar-btn.blue").addEventListener("click", importBoard);
   }
 
-  const color = colorPicker.value;
-  const timestamp = new Date().toLocaleString();
-
-  createNote(text, color, timestamp);
-  saveNotes();
-  updateNotesCount();
-}
-
-function createNote(text, color, timestamp) {
-  const note = document.createElement('div');
-  note.className = 'note';
-  note.style.backgroundColor = color;
-
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = '❌';
-  deleteBtn.className = 'delete-btn';
-  deleteBtn.onclick = () => {
-    note.remove();
-    saveNotes();
-    updateNotesCount();
-  };
-
-  const noteText = document.createElement('div');
-  noteText.textContent = text;
-
-  const time = document.createElement('span');
-  time.className = 'timestamp';
-  time.textContent = timestamp;
-
-  note.appendChild(deleteBtn);
-  note.appendChild(noteText);
-  note.appendChild(time);
-
-  const notesContainer = document.getElementById('notesContainer');
-  notesContainer.appendChild(note);
-
-  hideStartPrompt();
-}
-
-function clearAllNotes() {
-  document.getElementById('notesContainer').innerHTML = '<div class="start-prompt"><div class="plus-icon">+</div><p>Start Your Brain Dump</p><span>Click the + button in the toolbar to add your first note</span></div>';
-  localStorage.removeItem('notes');
-  updateNotesCount();
-}
-
-function saveNotes() {
-  const notes = [];
-  document.querySelectorAll('.note').forEach(note => {
-    const text = note.children[1].textContent;
-    const timestamp = note.querySelector('.timestamp').textContent;
-    const color = note.style.backgroundColor;
-    notes.push({ text, color, timestamp });
+  textNoteBtn.addEventListener("click", () => {
+    const content = prompt("Enter text note content:");
+    if (content) {
+      notes.push({
+        type: "Text",
+        content,
+        color: "#f3e8ff"
+      });
+      renderNotes();
+    }
   });
-  localStorage.setItem('notes', JSON.stringify(notes));
-}
 
-function loadNotes() {
-  const saved = JSON.parse(localStorage.getItem('notes') || '[]');
-  saved.forEach(note => createNote(note.text, note.color, note.timestamp));
-  updateNotesCount();
-}
+  sketchBtn.addEventListener("click", () => {
+    showSketchCanvas();
+  });
 
-function exportNotes() {
-  const notes = Array.from(document.querySelectorAll('.note')).map(note => {
-    const text = note.children[1].textContent;
-    const time = note.querySelector('.timestamp').textContent;
-    return `- ${text}\n  (${time})`;
-  }).join('\n\n');
+  voiceNoteBtn.addEventListener("click", () => {
+    const content = prompt("Describe your voice note:");
+    if (content) {
+      notes.push({
+        type: "Voice",
+        content,
+        color: "#fef9c3"
+      });
+      renderNotes();
+    }
+  });
 
-  const blob = new Blob([notes], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'mental-clarity-notes.txt';
-  a.click();
-}
+  function clearBoard() {
+    if (confirm("Are you sure you want to clear the board?")) {
+      notes = [];
+      location.reload();
+    }
+  }
+  clearBoardBtn.addEventListener("click", clearBoard);
 
-function updateNotesCount() {
-  const count = document.querySelectorAll('.note').length;
-  document.getElementById('notesCount').textContent = `${count} note${count !== 1 ? 's' : ''}`;
-}
+  function exportBoard() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", "mental_clarity_board.json");
+    dlAnchor.click();
+  }
+  exportBtn.addEventListener("click", exportBoard);
 
-function hideStartPrompt() {
-  const prompt = document.querySelector('.start-prompt');
-  if (prompt) prompt.remove();
-}
+  function importBoard() {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = ".json";
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        notes = JSON.parse(e.target.result);
+        renderNotes();
+      };
+      reader.readAsText(file);
+    });
+    fileInput.click();
+  }
+  importBtn.addEventListener("click", importBoard);
 
-window.onload = loadNotes;
+  function showSketchCanvas() {
+    main.innerHTML = `
+      <div class="toolbar">
+        <button class="toolbar-btn green">⬇️ Export</button>
+        <button class="toolbar-btn blue">⬆️ Import</button>
+        <button class="toolbar-btn red">🗑️ Clear Board</button>
+      </div>
+      <div class="sketch-container">
+        <canvas id="sketchCanvas" width="500" height="400" style="border:1px solid #ccc;"></canvas>
+        <div class="sketch-buttons">
+          <button id="saveSketch">Save Sketch</button>
+          <button id="clearSketch">Clear Sketch</button>
+          <button id="backToNotes">Back</button>
+        </div>
+      </div>
+    `;
+
+    const canvas = document.getElementById("sketchCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mouseout", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.fillStyle = "#000";
+      ctx.beginPath();
+      ctx.arc(e.clientX - rect.left, e.clientY - rect.top, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    document.getElementById("saveSketch").addEventListener("click", () => {
+      const dataUrl = canvas.toDataURL();
+      notes.push({
+        type: "Sketch",
+        content: dataUrl,
+        color: "#e0f2fe"
+      });
+      renderNotes();
+    });
+
+    document.getElementById("clearSketch").addEventListener("click", () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    document.getElementById("backToNotes").addEventListener("click", renderNotes);
+
+    // Reattach toolbar events
+    main.querySelector(".toolbar-btn.red").addEventListener("click", clearBoard);
+    main.querySelector(".toolbar-btn.green").addEventListener("click", exportBoard);
+    main.querySelector(".toolbar-btn.blue").addEventListener("click", importBoard);
+  }
+});
